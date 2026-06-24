@@ -1,0 +1,68 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface IRequestHandler {
+    + {abstract} handleRequest(raw_buffer: string): string
+}
+
+interface IMenu {
+    + {abstract} nextCommand(): int
+    + {abstract} getArguments(): string
+    + {abstract} printResults(message: string): void
+    + {abstract} displayError(error_message: string): void
+}
+
+class TcpClient <<Python>> {
+    + ip: string
+    + port: int
+    + connect(): void
+    + listen(): void
+    + sendRequest(args: string): void
+    + printResponse(args: string): void
+}
+
+class TcpServer {
+    - port: int
+    - handler: IRequestHandler&
+    + TcpServer(port: int, h: IRequestHandler&)
+    + startListening(): void
+}
+
+class Initialization {
+    - dataManager: DataManager
+    - socketMenu: SocketMenu
+    - app: App
+    + Initialization()
+    + handleRequest(raw_buffer: string): string override
+}
+
+class SocketMenu {
+    - current_arguments: string
+    - current_command_str: string
+    - output_response: string
+    + feedRawString(raw_request: string): void
+    + getFormedResponse(): string
+    + nextCommand(): int override
+    + getArguments(): string override
+    + printResults(message: string): void override
+    + displayError(error_message: string): void override
+}
+
+class App {
+    - menu: IMenu*
+    - commands: map<int, ICommand*>
+    + App(menu: IMenu*, cmds: map<int, ICommand*>)
+    + runOnce(): void
+}
+
+' Realization relationships (Interfaces)
+IRequestHandler <|.. Initialization : "implements (Inversion of Control)"
+IMenu <|.. SocketMenu : "implements menu contract"
+
+' Association and Composition relationships (Class fields)
+TcpServer --> IRequestHandler : "invokes method via reference (Uni-directional)"
+Initialization *-- SocketMenu : "owns (Composition)"
+TcpClient .right.> TcpServer : "communicates over TCP network"
+Initialization *-- App : "owns and configures (Composition)"
+App --> IMenu : "uses to retrieve commands (Loose Coupling)"
+@enduml

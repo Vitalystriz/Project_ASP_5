@@ -1,0 +1,374 @@
+.order-page-container {
+  max-width: 650px;
+  margin: 2rem auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.order-page-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #28526e;
+  border-bottom: 2px solid #e8ecef;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.dark-theme .order-page-title {
+  color: #a0c0d8;
+  border-color: #2d2d2d;
+}
+
+.order-empty-message {
+  color: #70757a;
+  font-style: italic;
+  text-align: center;
+  padding: 40px 0;
+  font-size: 1.1rem;
+}
+
+.dark-theme .order-empty-message {
+  color: #a0a0a0;
+}
+
+.order-success-container {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  margin-top: 2rem;
+  border: 1px solid #e8ecef;
+}
+
+.dark-theme .order-success-container {
+  background-color: #1a1a1a;
+  border-color: #2d2d2d;
+}
+
+.order-success-icon {
+  font-size: 4.5rem;
+  color: #28a745;
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+
+.order-success-title {
+  color: #28a745;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.order-success-text {
+  font-size: 1.15rem;
+  color: #202124;
+  margin-bottom: 0.25rem;
+}
+
+.dark-theme .order-success-text {
+  color: #ffffff;
+}
+
+.order-success-subtext {
+  font-size: 0.95rem;
+  color: #70757a;
+}
+
+.dark-theme .order-success-subtext {
+  color: #a0a0a0;
+}
+
+/* Order Cards styles */
+.order-card {
+  border: 1px solid #00c2e8;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 194, 232, 0.06);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.dark-theme .order-card {
+  background-color: #1a1a1a;
+  border-color: #00c2e8;
+}
+
+.order-history-card {
+  border: 1px solid #28a745;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.06);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.dark-theme .order-history-card {
+  background-color: #1a1a1a;
+  border-color: #28a745;
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #f1f3f4;
+  padding-bottom: 0.5rem;
+}
+
+.dark-theme .order-card-header {
+  border-color: #2d2d2d;
+}
+
+.order-card-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #28526e;
+}
+
+.dark-theme .order-card-title {
+  color: #a0c0d8;
+}
+
+.order-status-badge {
+  background-color: #28a745;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.order-card-id {
+  font-size: 0.8rem;
+  color: #70757a;
+  margin-bottom: 1rem;
+}
+
+.dark-theme .order-card-id {
+  color: #a0a0a0;
+}
+
+/* Order Item Row */
+.order-item-row {
+  border-top: 1px solid #f1f3f4;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.dark-theme .order-item-row {
+  border-color: #2d2d2d;
+}
+
+.order-item-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.order-item-img-placeholder {
+  width: 50px;
+  height: 50px;
+  background-color: #f1f3f4;
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.dark-theme .order-item-img-placeholder {
+  background-color: #252525;
+}
+
+.order-item-details {
+  flex: 1;
+}
+
+.order-item-name {
+  margin: 0 0 0.15rem 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #202124;
+}
+
+.dark-theme .order-item-name {
+  color: #ffffff;
+}
+
+.order-item-desc {
+  margin: 0;
+  color: #5f6368;
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+.dark-theme .order-item-desc {
+  color: #a0a0a0;
+}
+
+.order-item-price-label {
+  font-size: 0.8rem;
+  color: #70757a;
+  display: inline-block;
+  margin-top: 0.15rem;
+}
+
+.dark-theme .order-item-price-label {
+  color: #b0b0b0;
+}
+
+.order-item-controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  background-color: #f8f9fa;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.dark-theme .order-item-controls-row {
+  background-color: #252525;
+}
+
+.order-qty-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.order-qty-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #cccccc;
+  background-color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.dark-theme .order-qty-btn {
+  background-color: #1a1a1a;
+  border-color: #444;
+  color: white;
+}
+
+.order-qty-btn:hover:not(:disabled) {
+  border-color: #00c2e8;
+  color: #00c2e8;
+}
+
+.order-qty-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.order-item-subtotal-section {
+  text-align: right;
+}
+
+.order-subtotal-lbl {
+  font-size: 0.75rem;
+  color: #70757a;
+}
+
+.dark-theme .order-subtotal-lbl {
+  color: #a0a0a0;
+}
+
+.order-subtotal-val {
+  font-weight: 700;
+  color: #00c2e8;
+  font-size: 0.95rem;
+}
+
+.order-history-subtotal-val {
+  font-weight: 700;
+  color: #28a745;
+  font-size: 0.95rem;
+}
+
+.order-item-remove-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.order-item-remove-btn:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.order-item-remove-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Checkout Summary Section */
+.order-summary-box {
+  margin-top: 1.5rem;
+  background-color: #e9ecef;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: right;
+  transition: background-color 0.3s ease;
+}
+
+.dark-theme .order-summary-box {
+  background-color: #252525;
+}
+
+.order-summary-total {
+  margin: 0 0 1rem 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #28526e;
+}
+
+.dark-theme .order-summary-total {
+  color: #a0c0d8;
+}
+
+.order-summary-total-val {
+  color: #00c2e8;
+}
+
+.order-checkout-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.05rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.order-checkout-btn:hover {
+  background-color: #218838;
+}
+
+.order-checkout-btn:active {
+  transform: scale(0.98);
+}

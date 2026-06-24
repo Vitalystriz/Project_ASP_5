@@ -1,0 +1,205 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam monochrome false
+skinparam linetype orthogonal
+
+' =====================================================================
+' 1. NETWORKING LAYER (Completely Decoupled "Black Box")
+' =====================================================================
+
+interface IRequestHandler {
+    + {abstract} handleRequest(raw_buffer: string): string
+}
+
+class TcpServer {
+    - port: int
+    - server_fd: int
+    - handler: IRequestHandler&
+    + TcpServer(port: int, h: IRequestHandler&)
+    + startListening(): void
+}
+
+class TcpClient <<Python>> {
+    + ip: string
+    + port: int
+    + connect(): void
+    + listen(): void
+    + sendRequest(args: string): void
+    + printResponse(args: string): void
+}
+
+' =====================================================================
+' 2. REPRESENTATION LAYER (IMenu & Implementations)
+' =====================================================================
+
+interface IMenu {
+    + {abstract} nextCommand(): int
+    + {abstract} getArguments(): string
+    + {abstract} printResults(message: string): void
+    + {abstract} displayError(error_message: string): void
+}
+
+class ConsoleMenu {
+    + mapArgs: map<int, vector<int>>
+    + nextCommand(): int override
+    + displayError(error_message: string): void override
+    + getArguments(): string override
+}
+
+class SocketMenu {
+    - current_arguments: string
+    - current_command_str: string
+    - output_response: string
+    + feedRawString(raw_request: string): void
+    + getFormedResponse(): string
+    + nextCommand(): int override
+    + getArguments(): string override
+    + printResults(message: string): void override
+    + displayError(error_message: string): void override
+}
+
+' =====================================================================
+' 3. CORE APPLICATION & INITIALIZATION
+' =====================================================================
+
+class Initialization {
+    - dataManager: DataManager
+    - socketMenu: SocketMenu
+    - app: App
+    + Initialization()
+    + createCommandMap(menu: IMenu*, dm: DataManager&): map<int, ICommand*>
+    + appLaunch(): void
+    + handleRequest(raw_buffer: string): string override
+}
+
+class LoadingData {
+    + field: type
+    + method(type: type): type
+}
+
+class App {
+    - menu: IMenu*
+    - commands: map<int, ICommand*>
+    + App()
+    + App(menu: IMenu*, cmds: map<int, ICommand*>)
+    + run(): void
+    + runOnce(): void
+}
+
+' =====================================================================
+' 4. LOGIC LAYER (Command Pattern)
+' =====================================================================
+
+interface ICommand {
+    + {abstract} execute(): void
+}
+
+class AddCommand {
+    - menu: IMenu*
+    - dataManager: DataManager&
+    + execute(): void override
+}
+
+class RecommendCommand {
+    - menu: IMenu*
+    - dataManager: DataManager&
+    + execute(): void override
+}
+
+class HelpCommand {
+    + execute(): void override
+}
+
+' =====================================================================
+' 5. DATA MANAGEMENT & STORAGE LAYER
+' =====================================================================
+
+class DataManager {
+    + userToProducts: map<int, vector<int>>
+    + productToUsers: map<int, vector<int>>
+    + loadFromFiles(usersPath: string, productsPath: string): void
+}
+
+interface IDataAction {
+    + {abstract} execute(): void
+}
+
+class AppendUserAction {
+    + execute(ds: DataManager*): void
+    + AppendProductAction(vec: vector<int>, userId: int)
+}
+
+class AppendProductAction {
+    + execute(ds: DataManager*): void
+    + AppendProductAction(vec: vector<int>, userId: int)
+}
+
+interface IDataStorage {
+    + {abstract} parseToTxt(): void
+}
+
+class AppendUserStorage {
+    + parseToTxt(storage: DataManager&): void
+}
+
+' =====================================================================
+' 6. RECOMMENDATION SUB-SYSTEM (ALGORITHMS)
+' =====================================================================
+
+class Similarity {
+    - similarityMap: map<int, double>
+    + calculate(dm: DataManager*, userId: int): void
+}
+
+class CandidateProducts {
+    - candidateProductsMap: map<int, int>
+    + calculate(dm: DataManager*, productId: int): void
+}
+
+class RecommendationList {
+    - similarity: Similarity
+    - candidateProductsMap: CandidateProducts
+    + calculate(): vector<int>
+}
+
+' =====================================================================
+' ARCHITECTURAL CONNECTIONS (RELATIONS)
+' =====================================================================
+
+' Realizations (Interface Implementations)
+IRequestHandler <|.. Initialization : "implements contract"
+IMenu <|.. ConsoleMenu : "CLI mode"
+IMenu <|.. SocketMenu : "Network mode"
+ICommand <|.. AddCommand
+ICommand <|.. RecommendCommand
+ICommand <|.. HelpCommand
+IDataAction <|.. AppendUserAction
+IDataAction <|.. AppendProductAction
+IDataStorage <|.. AppendUserStorage
+
+' Compositions and Ownerships
+Initialization *-- SocketMenu : "owns"
+Initialization *-- App : "owns & configures"
+Initialization *-- DataManager : "owns Single Source of Truth"
+Initialization --> LoadingData : "manages"
+
+App "1" *-- "0..*" ICommand : "dispatches"
+App --> IMenu : "loosely coupled reading"
+
+TcpServer --> IRequestHandler : "triggers via ref (Loose Coupling)"
+TcpClient .right.> TcpServer : "communicates over TCP network"
+
+' Core Dependency Injection / Usage Arrows
+AddCommand --> DataManager : "updates data"
+RecommendCommand --> DataManager : "reads data"
+RecommendCommand ..> RecommendationList : "instantiates calculation"
+
+AppendUserAction ..> DataManager : "uses"
+AppendProductAction ..> DataManager : "uses"
+AppendUserStorage ..> DataManager : "serializes"
+
+RecommendationList --> Similarity : "uses results"
+RecommendationList --> CandidateProducts : "uses filters"
+Similarity ..> DataManager : "reads sparse matrices"
+CandidateProducts ..> DataManager : "reads matrices"
+@enduml

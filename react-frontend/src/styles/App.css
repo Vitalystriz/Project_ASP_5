@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Heebo', sans-serif;
+}
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background-color: #f0f4f8;
+  color: #202124;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-theme {
+  background-color: #121212;
+  color: #f1f3f4;
+}
+
+.app-container {
+  min-height: 100vh;
+  direction: ltr;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem; 
+  box-sizing: border-box;
+}
+
+.page-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #28526e;
+  margin-bottom: 1.5rem; 
+  margin-top: 1.5rem;
+  text-align: center;
+  width: 100%;
+  transition: color 0.3s ease;
+}
+
+body.dark-theme .page-title {
+  color: #a0c0d8;
+}
+
+.loading {
+  grid-column: 1 / -1;
+  width: 100%;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #00c2e8;
+  font-weight: bold;
+  padding: 60px 20px;
+}
+
+.back-btn {
+  background-color: #00c2e8;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  align-self: flex-start;    
+  width: fit-content;        
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.back-btn:hover {
+  background-color: #009cb2;
+}
