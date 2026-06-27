@@ -20,15 +20,17 @@ app.use('/api/orders', ordersRouter);
 app.use('/api/search', search);
 
 const http = require('http');
-const usersModel = require('./models/users');
+const usersService = require('./services/usersService');
+const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 5000;
 
-const seedDatabase = (port) => {
+const seedDatabase = async (port) => {
     try {
-        const systemUser = usersModel.createUser('System', 'system_init_' + Date.now(), 'password', '', 0, 0);
+        const systemUser = await usersService.createUser('System', 'system_init_' + Date.now(), 'password', '', 0, 0);
         if (systemUser) {
             systemUser.authorized = true;
+            await systemUser.save();
         }
 
         const restData = JSON.stringify({
@@ -108,7 +110,16 @@ const seedDatabase = (port) => {
     }
 };
 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server is running on port ${PORT}`);
-    seedDatabase(PORT);
-});
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/project5';
+
+mongoose.connect(MONGODB_URI)
+    .then(() => {
+        console.log(`Connected to MongoDB at ${MONGODB_URI}`);
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`Server is running on port ${PORT}`);
+            seedDatabase(PORT);
+        });
+    })
+    .catch((err) => {
+        console.error('Failed to connect to MongoDB:', err);
+    });
