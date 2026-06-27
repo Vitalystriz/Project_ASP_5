@@ -13,6 +13,7 @@ const restaurantsRoutes = require('./routes/restaurantRouter');
 const ordersRouter = require('./routes/orders');
 const search = require('./routes/search');
 
+
 app.use('/api/users', usersRouter);
 app.use('/api/tokens', tokensRouter);
 app.use('/api/restaurants', restaurantsRoutes);
@@ -21,6 +22,7 @@ app.use('/api/search', search);
 
 const http = require('http');
 const usersService = require('./services/usersService');
+const restaurantService = require('./services/restaurantService')
 const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 5000;

@@ -13,6 +13,6 @@ const userSchema = new schema({
     authorized: {type: Boolean, default: false},
     x: { type: Number, required: true },
     y: { type: Number, required: true }
-})
+}, { toJSON: { virtuals: true }, toObject: { virtuals: true } })
 
-module.exports = mongoose.model('Users', userSchema)
+module.exports = mongoose.model('User', userSchema)

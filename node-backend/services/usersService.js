@@ -1,9 +1,9 @@
-const Users = require('../models/users')
+const User = require('../models/users')
 const crypto = require("crypto");
 
 
 const createUser = async (displayName, username, password, profilePic, x, y) => {
-    const user = new Users({
+    const user = new User({
         displayName: displayName,
         username: username,
         password: password,
@@ -15,7 +15,7 @@ const createUser = async (displayName, username, password, profilePic, x, y) => 
 };
 const getUserByID = async (id) => {
     try {
-        return await Users.findById(id)
+        return await User.findById(id)
     }
     catch (error) {
         return null
@@ -24,7 +24,7 @@ const getUserByID = async (id) => {
 
 const getUserByUsername = async (username) => {
     try {
-        return await Users.findOne({'username': username})
+        return await User.findOne({'username': username})
     }
     catch (error) {
         return null
@@ -33,7 +33,7 @@ const getUserByUsername = async (username) => {
 
 const authentication = async (username, password) => {
     try {
-        const user = await Users.findOne({'username': username, 'password': password})
+        const user = await User.findOne({'username': username, 'password': password})
         if (user) {
             user.authorized = true
             await user.save()
