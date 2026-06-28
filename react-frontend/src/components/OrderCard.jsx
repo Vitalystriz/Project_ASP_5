@@ -140,7 +140,7 @@ export default function OrderCard({ order, onPriceReport, onUpdateRequired }) {
 
         if (updatedProducts.length === 0) {
             try {
-                const response = await fetch(`http://localhost:5000/api/orders/${order.id}`, {
+                const response = await fetch(`http://localhost:5000/api/orders/${order._id || order.id}`, {
                     method: 'DELETE',
                     headers: {
                         'user-id': order.userId
@@ -157,7 +157,7 @@ export default function OrderCard({ order, onPriceReport, onUpdateRequired }) {
         }
 
         try {
-            const response = await fetch(`http://localhost:5000/api/orders/${order.id}`, {
+            const response = await fetch(`http://localhost:5000/api/orders/${order._id || order.id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -189,7 +189,7 @@ export default function OrderCard({ order, onPriceReport, onUpdateRequired }) {
             {order.products && order.products.map(product => (
                 <OrderItem
                     key={product.productId}
-                    orderId={order.id}
+                    orderId={order._id || order.id}
                     restaurantId={order.restaurantId}
                     userId={order.userId}
                     product={product}

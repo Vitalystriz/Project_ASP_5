@@ -12,7 +12,9 @@ const Product = ({ addToOrder }) => {
     const [error, setError] = React.useState(false);
     const [recommendations, setRecommendations] = React.useState([]);
 
-    const targetUserId = JSON.parse(localStorage.getItem('user'))?.id;
+    const storedUser = localStorage.getItem('user');
+    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+    const targetUserId = parsedUser?._id || parsedUser?.id;
 
 
 
@@ -105,7 +107,9 @@ const Product = ({ addToOrder }) => {
             return;
         }
 
-        const targetUserId = JSON.parse(localStorage.getItem('user'))?.id;
+        const storedUser = localStorage.getItem('user');
+        const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+        const targetUserId = parsedUser?._id || parsedUser?.id;
         if (!targetUserId) {
             alert("Please log in first to add items to your order.");
             return;
@@ -152,7 +156,7 @@ const Product = ({ addToOrder }) => {
                     updatedProducts = [{ productId: id, quantity: 1 }];
                 }
 
-                const patchResponse = await fetch(`http://localhost:5000/api/orders/${activeOrder.id}`, {
+                const patchResponse = await fetch(`http://localhost:5000/api/orders/${activeOrder._id || activeOrder.id}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',

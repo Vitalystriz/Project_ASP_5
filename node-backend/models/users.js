@@ -1,48 +1,18 @@
 const crypto = require('crypto');
+const mongoose = require('mongoose')
 
-const users = [];
 
-const createUser = (displayName, username, password, profilePic, x, y) => {
-    const user = {
-        id: crypto.randomUUID(),
-        displayName: displayName,
-        username: username,
-        password: password,
-        profilePic: profilePic,
-        authorized: false,
-        x: parseFloat(x), 
-        y: parseFloat(y)
-    };
-    users.push(user);
-    return user;
-};
 
-const getUserByID = (id) => {
-    return users.find(user => user.id === id);
-};
+const schema = mongoose.Schema
 
-const getUserByUsername = (username) => {
-    return users.find(user => user.username === username);
-};
+const userSchema = new schema({
+    displayName: {type: String, required: true},
+    username: {type: String, required: true, unique: true},
+    password: {type: String, required: true},
+    profilePic: {type: String, default: ''},
+    authorized: {type: Boolean, default: false},
+    x: { type: Number, required: true },
+    y: { type: Number, required: true }
+}, { toJSON: { virtuals: true }, toObject: { virtuals: true } })
 
-const authentication = (username, password) => {
-    const user = users.find(user => user.username === username && user.password === password);
-    if (user) {
-        user.authorized = true;
-        return user;
-    }
-    return null;
-};
-
-const isAuthorized = (id) => {
-    const user = users.find(user => user.id === id);
-    return user ? user.authorized : false;
-}; 
-
-module.exports = {
-    createUser,
-    getUserByID,
-    getUserByUsername,
-    authentication,
-    isAuthorized
-};
+module.exports = mongoose.model('User', userSchema)

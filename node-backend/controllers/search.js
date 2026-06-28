@@ -1,18 +1,20 @@
-const Restaraunts = require('../models/restaurant')
-const Products = require('../models/product')
+const restaurantService = require('../services/restaurantService')
+const productService = require('../services/productService')
 
 
-exports.getSearchByQuery = (req,res) =>
-    {
-    const target = req.params.query.toLowerCase()
+exports.getSearchByQuery = async (req, res) => {
+    try {
+        const target = req.params.query.toLowerCase()
 
-    const restaraunts = Restaraunts.findTarget(target)
-    const products = Products.findTarget(target)
+        const restaraunts = await restaurantService.findTarget(target)
+        const products = await productService.findTarget(target)
 
-    if (!restaraunts && !products) {
-        return res.status(400).json({error: 'No results'})
+        if ((!restaraunts || restaraunts.length === 0) && (!products || products.length === 0)) {
+            return res.status(400).json({error: 'No results'})
+        }
+        
+        res.status(200).json({restaraunts, products})
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error during search", message: error.message });
     }
-    
-    res.status(200).json({restaraunts, products})
-
 }

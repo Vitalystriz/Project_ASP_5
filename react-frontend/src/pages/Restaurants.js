@@ -23,7 +23,7 @@ const Restaurants = ({ searchTerm }) => {
 
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
-    const targetUserId = user?.id;
+    const targetUserId = user?._id || user?.id;
     const userX = user?.x !== undefined ? parseFloat(user.x) : null;
     const userY = user?.y !== undefined ? parseFloat(user.y) : null;
 
