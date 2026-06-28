@@ -39,11 +39,14 @@ const updateRestaurantByID = async (id, name, type, description, x, y) => {
 };
 
 const findTarget = async (target) => {
-    const restaurants = await getAllRestaurants()
+    const restaurants = await getAllRestaurants();
+    const mongoose = require('mongoose');
+    const isId = mongoose.Types.ObjectId.isValid(target);
     return restaurants.filter((restaurant) =>
-        restaurant.name.toLowerCase().includes(target) ||
-        restaurant.description.toLowerCase().includes(target) ||
-        restaurant.type.toLowerCase().includes(target)
+        (isId && restaurant._id.toString() === target) ||
+        (restaurant.name && restaurant.name.toLowerCase().includes(target)) ||
+        (restaurant.description && restaurant.description.toLowerCase().includes(target)) ||
+        (restaurant.type && restaurant.type.toLowerCase().includes(target))
     );
 };
 

@@ -8,7 +8,9 @@ export default function HistoryOrdersPage() {
     const [totalCartCost, setTotalCartCost] = useState(0);
     const itemPricesRef = useRef({});
 
-    const targetUserId = JSON.parse(localStorage.getItem('user'))?.id;
+    const storedUser = localStorage.getItem('user');
+    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+    const targetUserId = parsedUser?._id || parsedUser?.id;
     console.log(targetUserId)
 
     const fetchActiveCartData = async () => {

@@ -24,9 +24,16 @@ const Navbar = ({ searchTerm, setSearchTerm }) => {
     if (token && userString) {
         try {
             const user = JSON.parse(userString);
+            const getAvatarUrl = (profilePic) => {
+                if (!profilePic) return 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+                if (profilePic.startsWith('data:') || profilePic.startsWith('http://') || profilePic.startsWith('https://')) {
+                    return profilePic;
+                }
+                return `http://localhost:5000/uploads/${profilePic}`;
+            };
             setUserData({
                 name: user.displayName || user.username || 'User',
-                avatar: user.profilePic ? `http://localhost:5000/uploads/${user.profilePic}` : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+                avatar: getAvatarUrl(user.profilePic)
             });
             if (user.x !== undefined && user.y !== undefined) {
                 setUserX(user.x);

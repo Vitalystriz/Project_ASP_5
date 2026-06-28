@@ -17,7 +17,9 @@ const Restaurant = ({ searchTerm, addToOrder }) => {
         price: '',
         description: ''
     });
-    const targetUserId = JSON.parse(localStorage.getItem('user'))?.id;
+    const storedUser = localStorage.getItem('user');
+    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+    const targetUserId = parsedUser?._id || parsedUser?.id;
 
     React.useEffect(() => {
         const fetchRestaurantData = async () => {

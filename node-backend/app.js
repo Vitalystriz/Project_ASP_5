@@ -28,44 +28,45 @@ const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 5000;
 
-const seedDatabase = async (port) => {
+const seedDatabase = async () => {
     try {
-        const existingUser = await usersService.getUserByUsername('system_init_')
-        if(!existingUser) {
-            const systemUser = await usersService.createUser('System', 'system_init_' + Date.now(), 'password', '', 0, 0);
-            if (systemUser) {
-                systemUser.authorized = true;
-                await systemUser.save();
+        // Ensure there is one and only one system user
+        const systemUser = await mongoose.model('User').findOne({ username: 'system' });
+        if (!systemUser) {
+            console.log('[SEED] No system user found. Creating system user...');
+            const newSystemUser = await usersService.createUser('System', 'system', 'password', '', 0, 0);
+            if (newSystemUser) {
+                newSystemUser.authorized = true;
+                await newSystemUser.save();
+                console.log('[SEED] System user created successfully.');
             }
         }
 
-
-        const exampleRestaurant = await restaurantService.getAllRestaurants()
-        if (!exampleRestaurant) {
+        // Ensure there is one global example restaurant and product
+        const existingRestaurant = await mongoose.model('Restaurant').findOne({ name: "Example Restaurant" });
+        if (!existingRestaurant) {
+            console.log('[SEED] Example Restaurant not found. Creating example restaurant and product...');
             const restaurant = await restaurantService.createRestaurant(
-                "ExampleRestaurant",
+                "Example Restaurant",
                 "Fast Food",
                 "An example restaurant created during initialization.",
                 10,
                 20
             );
+
             if (restaurant && restaurant.id) {
-                console.log(`[SEED] ExampleRestaurant created successfully: ${restaurant.id}`);
+                console.log(`[SEED] Example Restaurant created successfully: ${restaurant.id}`);
 
                 await productService.createProduct(
                     restaurant.id,
-                    "ExampleProduct",
-                    "Food",
-                    "An example product created during initialization.",
-                    15
+                    "Example Burger",
+                    "Main Course",
+                    "A delicious burger made with fresh ingredients.",
+                    25.50
                 );
-                console.log("[SEED] ExampleProduct created successfully.");
+                console.log("[SEED] Example Product created successfully.");
             }
         }
-
-
-
-
     } catch (error) {
         console.error("[SEED] Database seeding failed:", error);
     }

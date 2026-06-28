@@ -15,7 +15,11 @@ exports.userSignIn = async (req, res) => {
             return res.status(409).json({ message: 'Username is already taken' });
         }
         
-        const profilePic = req.file ? req.file.filename : null;
+        let profilePic = null;
+        if (req.file) {
+            const base64Image = req.file.buffer.toString('base64');
+            profilePic = `data:${req.file.mimetype};base64,${base64Image}`;
+        }
         const user = await userService.createUser(displayName, trimmedName, password, profilePic, parseFloat(x), parseFloat(y));
         res.status(201).json(user);
     } catch (error) {

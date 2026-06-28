@@ -68,13 +68,24 @@ const updateProductByID = async (restaurantId, productId, name, type, descriptio
 
 const findTarget = async (target) => {
     try {
-        return await Product.find({
-            $or: [
-                { name: { $regex: target, $options: 'i' } },
-                { description: { $regex: target, $options: 'i' } },
-                { type: { $regex: target, $options: 'i' } }
-            ]
-        });
+        const mongoose = require('mongoose');
+        const query = mongoose.Types.ObjectId.isValid(target)
+            ? {
+                $or: [
+                    { _id: target },
+                    { name: { $regex: target, $options: 'i' } },
+                    { description: { $regex: target, $options: 'i' } },
+                    { type: { $regex: target, $options: 'i' } }
+                ]
+              }
+            : {
+                $or: [
+                    { name: { $regex: target, $options: 'i' } },
+                    { description: { $regex: target, $options: 'i' } },
+                    { type: { $regex: target, $options: 'i' } }
+                ]
+              };
+        return await Product.find(query);
     } catch (error) {
         return [];
     }
