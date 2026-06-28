@@ -44,16 +44,32 @@ services:
       - BACKEND_PORT=8080
       - MONGODB_URI=mongodb://mongo:27017/project5
 
-    # React Frontend
-  react:
+#    # React Frontend
+#  react:
+#    build:
+#      context: ./react-frontend
+#      dockerfile: native-react/React.Dockerfile
+#    container_name: react_
+#    depends_on:
+#      - api_js
+#    ports:
+#      - "8081:8081"
+
+
+  native:
     build:
-      context: ./react-frontend
+      context: ./native-react
       dockerfile: React.Dockerfile
-    container_name: react_
+    container_name: native
     depends_on:
       - api_js
     ports:
-      - "3000:3000"
+      - "8081:8081"
+    environment:
+      - REACT_NATIVE_PACKAGER_HOSTNAME=10.0.2.2
+    volumes:
+      - ./native-react:/app
+      - /app/node_modules
 
 volumes:
   mongo-data:
