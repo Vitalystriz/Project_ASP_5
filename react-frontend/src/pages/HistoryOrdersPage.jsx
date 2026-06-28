@@ -67,7 +67,7 @@ export default function HistoryOrdersPage() {
                     <div>
                         {orders.map((singleOrder) => (
                             <OrderCard
-                                key={singleOrder.id}
+                                key={singleOrder._id || singleOrder.id}
                                 order={singleOrder}
                                 onPriceReport={handlePriceReport}
                             />

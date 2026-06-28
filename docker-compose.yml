@@ -1,4 +1,4 @@
-version: '3.8'
+
 
 services:
   # C++ TCP-servr
@@ -7,35 +7,53 @@ services:
       context: ./ass2Server
       dockerfile: Dockerfile
       target: runtime # get a
-    container_name: recommendation_server
+    container_name: recommendation_cpp_server
     expose:
       - "8080"
     volumes:
       - ./ass2Server/data:/app/ass2Server/data # equals to -v "${PWD}/data:/app/data" recommendation-app
     command: ["./RecommendationApp", "8080"] # CHANGE IT HERE passing the port as an arg to main
 
+
+  # MongoDB Database Service
+  mongo:
+    image: mongo:latest
+    container_name: mongo_db
+    ports:
+      - "27017:27017" # Expose port to host machine for debugging
+    volumes:
+      - mongo-data:/data/db
+    logging:
+      driver: "none"
+
+
+
   # API_JS
   api_js:
     build:
       context: ./node-backend
       dockerfile: API_JS.Dockerfile
-    container_name: api_js
+    container_name: api_js_
     depends_on:
       - server # First of all server and then client
+      - mongo
     ports:
       - "5000:5000"
     environment:
       - BACKEND_HOST=server
       - BACKEND_PORT=8080
+      - MONGODB_URI=mongodb://mongo:27017/project5
 
     # React Frontend
   react:
     build:
       context: ./react-frontend
       dockerfile: React.Dockerfile
-    container_name: react
+    container_name: react_
     depends_on:
       - api_js
     ports:
       - "3000:3000"
 
+volumes:
+  mongo-data:

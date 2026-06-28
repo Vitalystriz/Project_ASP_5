@@ -5,7 +5,7 @@ import '../styles/Order.css';
 export default function OrderPage() {
     const [latestOrder, setLatestOrder] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [totalCartCost, setTotalCartCost] = useState(0);
+    const [productPrices, setProductPrices] = useState({});
     const [isOrderPlaced, setIsOrderPlaced] = useState(false);
 
     const targetUserId = JSON.parse(localStorage.getItem('user'))?.id;
@@ -46,16 +46,23 @@ export default function OrderPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleCardPriceReport = (orderId, cardSum) => {
-        setTotalCartCost(cardSum);
+    const handleCardPriceReport = (productId, itemTotal) => {
+        setProductPrices(prev => ({
+            ...prev,
+            [productId]: itemTotal
+        }));
     };
+
+    const totalCartCost = latestOrder && latestOrder.products
+        ? latestOrder.products.reduce((sum, p) => sum + (productPrices[p.productId] || 0), 0)
+        : 0;
 
     const executeFinalCheckout = async () => {
         if (!latestOrder) return;
         setIsLoading(true);
 
         try {
-            const response = await fetch(`http://localhost:5000/api/orders/${latestOrder.id}`, {
+            const response = await fetch(`http://localhost:5000/api/orders/${latestOrder._id || latestOrder.id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -101,7 +108,7 @@ export default function OrderPage() {
                 <>
                     <div>
                         <OrderCard
-                            key={latestOrder.id}
+                            key={latestOrder._id || latestOrder.id}
                             order={latestOrder}
                             onPriceReport={handleCardPriceReport}
                             onUpdateRequired={fetchActiveCartData}

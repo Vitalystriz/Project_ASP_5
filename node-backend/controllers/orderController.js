@@ -1,8 +1,8 @@
-const orderModel = require('../models/order')
+const orderService = require('../services/orderService')
 const productService = require('../services/productService')
 
-const getAllOrders = (req, res) => {
-    const data = orderModel.getAllOrders()
+const getAllOrders = async (req, res) => {
+    const data = await orderService.getAllOrders()
     res.status(200).json(data)
 }
 
@@ -45,7 +45,7 @@ const createOrder = async (req, res) => {
             product.quantity = quantity;
         }
 
-        const newOrder = orderModel.createOrder(userId, restaurantId, products);
+        const newOrder = await orderService.createOrder(userId, restaurantId, products);
 
         res.status(201).json(newOrder);
     } catch (error) {
@@ -53,24 +53,24 @@ const createOrder = async (req, res) => {
     }
 };
 
-const getOrderById = (req, res) => {
+const getOrderById = async (req, res) => {
     const id = req.params.id
-    const order = orderModel.getOrderById(id)
+    const order = await orderService.getOrderById(id)
     if (!order) return res.status(404).json({error: "order wasn't found"})
     res.status(200).json(order)
 }
 
-const updateOrderById = (req, res) => {
+const updateOrderById = async (req, res) => {
     const id = req.params.id
     const { restaurantId, products, status } = req.body
-    const updatedOrder = orderModel.updateOrderById(id, { restaurantId, products, status })
+    const updatedOrder = await orderService.updateOrderById(id, { restaurantId, products, status })
     if (!updatedOrder) return res.status(404).json({ error: "order wasn't found" })
     res.status(200).json(updatedOrder)
 }
 
-const deleteOrderById = (req, res) => {
+const deleteOrderById = async (req, res) => {
     const id = req.params.id
-    const deletedOrder = orderModel.deleteOrderById(id)
+    const deletedOrder = await orderService.deleteOrderById(id)
     if (!deletedOrder) return res.status(404).json({error: "Order not found"})
     res.status(204).send()
 }

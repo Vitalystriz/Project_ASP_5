@@ -98,7 +98,7 @@ export default function OrderHistoryCard({ order, onPriceReport }) {
                     restaurantId={order.restaurantId}
                     userId={order.userId}
                     product={product}
-                    onPriceReport={(prodId, itemTotal) => onPriceReport(prodId, itemTotal)}
+                    onPriceReport={(prodId, itemTotal) => onPriceReport(order.id, prodId, itemTotal)}
                 />
             ))}
         </div>

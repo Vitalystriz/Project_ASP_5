@@ -152,7 +152,7 @@ const Product = ({ addToOrder }) => {
                     updatedProducts = [{ productId: id, quantity: 1 }];
                 }
 
-                const patchResponse = await fetch(`http://localhost:5000/api/orders/${activeOrder.id}`, {
+                const patchResponse = await fetch(`http://localhost:5000/api/orders/${activeOrder._id || activeOrder.id}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',

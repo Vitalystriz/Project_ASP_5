@@ -23,89 +23,48 @@ app.use('/api/search', search);
 const http = require('http');
 const usersService = require('./services/usersService');
 const restaurantService = require('./services/restaurantService')
+const productService = require('./services/productService');
 const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 5000;
 
 const seedDatabase = async (port) => {
     try {
-        const systemUser = await usersService.createUser('System', 'system_init_' + Date.now(), 'password', '', 0, 0);
-        if (systemUser) {
-            systemUser.authorized = true;
-            await systemUser.save();
+        const existingUser = await usersService.getUserByUsername('system_init_')
+        if(!existingUser) {
+            const systemUser = await usersService.createUser('System', 'system_init_' + Date.now(), 'password', '', 0, 0);
+            if (systemUser) {
+                systemUser.authorized = true;
+                await systemUser.save();
+            }
         }
 
-        const restData = JSON.stringify({
-            name: "ExampleRestaurant",
-            type: "Fast Food",
-            description: "An example restaurant created during initialization.",
-            x: 10,
-            y: 20
-        });
 
-        const options = {
-            hostname: '127.0.0.1',
-            port: port,
-            path: '/api/restaurants',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'user-id': systemUser.id,
-                'Content-Length': Buffer.byteLength(restData)
+        const exampleRestaurant = await restaurantService.getAllRestaurants()
+        if (!exampleRestaurant) {
+            const restaurant = await restaurantService.createRestaurant(
+                "ExampleRestaurant",
+                "Fast Food",
+                "An example restaurant created during initialization.",
+                10,
+                20
+            );
+            if (restaurant && restaurant.id) {
+                console.log(`[SEED] ExampleRestaurant created successfully: ${restaurant.id}`);
+
+                await productService.createProduct(
+                    restaurant.id,
+                    "ExampleProduct",
+                    "Food",
+                    "An example product created during initialization.",
+                    15
+                );
+                console.log("[SEED] ExampleProduct created successfully.");
             }
-        };
+        }
 
-        const req = http.request(options, (res) => {
-            let body = '';
-            res.on('data', (chunk) => body += chunk);
-            res.on('end', () => {
-                try {
-                    const restaurant = JSON.parse(body);
-                    if (restaurant && restaurant.id) {
-                        console.log(`[SEED] ExampleRestaurant created successfully: ${restaurant.id}`);
-                        
-                        const productData = JSON.stringify({
-                            name: "ExampleProduct",
-                            type: "Food",
-                            description: "An example product created during initialization.",
-                            price: 15
-                        });
 
-                        const prodOptions = {
-                            hostname: '127.0.0.1',
-                            port: port,
-                            path: `/api/restaurants/${restaurant.id}/products`,
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'user-id': systemUser.id,
-                                'Content-Length': Buffer.byteLength(productData)
-                            }
-                        };
 
-                        const prodReq = http.request(prodOptions, (prodRes) => {
-                            let prodBody = '';
-                            prodRes.on('data', (chunk) => prodBody += chunk);
-                            prodRes.on('end', () => {
-                                console.log("[SEED] ExampleProduct created successfully.");
-                            });
-                        });
-                        prodReq.on('error', (err) => console.error("[SEED] Error creating ExampleProduct:", err));
-                        prodReq.write(productData);
-                        prodReq.end();
-                    }
-                } catch (e) {
-                    console.error("[SEED] Failed to parse restaurant response:", e);
-                }
-            });
-        });
-
-        req.on('error', (err) => {
-            console.error("[SEED] Error creating ExampleRestaurant:", err);
-        });
-
-        req.write(restData);
-        req.end();
 
     } catch (error) {
         console.error("[SEED] Database seeding failed:", error);
@@ -116,12 +75,12 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/projec
 
 mongoose.connect(MONGODB_URI)
     .then(() => {
-        console.log(`Connected to MongoDB at ${MONGODB_URI}`);
+        // console.log(`Connected to MongoDB at ${MONGODB_URI}`);
         app.listen(PORT, '0.0.0.0', () => {
             console.log(`Server is running on port ${PORT}`);
             seedDatabase(PORT);
         });
     })
     .catch((err) => {
-        console.error('Failed to connect to MongoDB:', err);
+        // console.error('Failed to connect to MongoDB:', err);
     });
