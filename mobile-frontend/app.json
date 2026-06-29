@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Volt delivery",
+    "slug": "mobile-frontend",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/Volt_Logo.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/Volt_Logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff",
+        "foregroundImage": "./assets/Volt_Logo.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/Volt_Logo.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app needs to access your photos to set a profile picture."
+        }
+      ]
+    ]
+  }
+}
