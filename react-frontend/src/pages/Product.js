@@ -12,9 +12,7 @@ const Product = ({ addToOrder }) => {
     const [error, setError] = React.useState(false);
     const [recommendations, setRecommendations] = React.useState([]);
 
-    const storedUser = localStorage.getItem('user');
-    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
-    const targetUserId = parsedUser?._id || parsedUser?.id;
+    const targetUserId = JSON.parse(localStorage.getItem('user'))?.id;
 
 
 
@@ -107,9 +105,7 @@ const Product = ({ addToOrder }) => {
             return;
         }
 
-        const storedUser = localStorage.getItem('user');
-        const parsedUser = storedUser ? JSON.parse(storedUser) : null;
-        const targetUserId = parsedUser?._id || parsedUser?.id;
+        const targetUserId = JSON.parse(localStorage.getItem('user'))?.id;
         if (!targetUserId) {
             alert("Please log in first to add items to your order.");
             return;

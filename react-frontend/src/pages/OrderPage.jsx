@@ -8,9 +8,7 @@ export default function OrderPage() {
     const [productPrices, setProductPrices] = useState({});
     const [isOrderPlaced, setIsOrderPlaced] = useState(false);
 
-    const storedUser = localStorage.getItem('user');
-    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
-    const targetUserId = parsedUser?._id || parsedUser?.id;
+    const targetUserId = JSON.parse(localStorage.getItem('user'))?.id;
     console.log(targetUserId)
     const fetchActiveCartData = async () => {
         try {

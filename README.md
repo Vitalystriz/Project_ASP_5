@@ -1,9 +1,11 @@
 # Project_ASP
-This is a repoitory for the fourth sprint in the project in course Advanced System Programming  
+This is a repoitory for the fifth sprint in the project in course Advanced System Programming  
 
 
 ## Build and run app instruction
-- Write in terminal `docker compose up --build` in the root of the project
+1) **Launch Services:** Run `docker-compose up --build`
+2) **Run App:** Open **Expo Go** on the emulator and enter:
+   `exp://10.0.2.2:8081`
 ## Workflow 
 - As you may understand we've already written cpp backend engine and node js api
 - So now we implement frontend to our app
