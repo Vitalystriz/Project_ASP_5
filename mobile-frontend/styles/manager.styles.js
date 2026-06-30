@@ -86,5 +86,13 @@ export const managerStyles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 5,
     fontSize: 15,
+  },
+  locationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  locationInput: {
+    width: '48%', 
   }
 });

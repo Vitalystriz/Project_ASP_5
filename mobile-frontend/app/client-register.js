@@ -20,7 +20,7 @@ export default function Register() {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images, 
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.5,
@@ -78,20 +78,21 @@ export default function Register() {
         });
       }
 
-      const response = await fetch(BASE_URL, {
+      
+      const response = await fetch(`${BASE_URL}/api/users`, {
         method: 'POST',
         body: formData,
         headers: {
             'Accept': 'application/json',
         },
-    });
+      });
 
       if (response.ok) {
         Alert.alert('Success', 'Account created successfully!');
         router.replace('/client-login');
       } else {
-        const data = await response.text();
-        console.log("Server returned:", data);
+        
+        const data = await response.json(); 
         Alert.alert('Error', data.message || 'Registration failed. Username might already exist.');
       }
     } catch (err) {
@@ -101,10 +102,9 @@ export default function Register() {
   };
 
  return (
-    
     <View style={styles.mainBackground}> 
       <BackButton /> 
-
+      
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>Sign Up for Volt</Text>
 

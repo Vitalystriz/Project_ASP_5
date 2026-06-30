@@ -7,4 +7,4 @@
  * - For Physical Device: Change to the IPv4 address of the computer running the server (e.g., '192.168.1.15')
  */
 
-export const BASE_URL = 'http://10.0.0.10:5000'
+export const BASE_URL = 'http://10.0.0.2:5000';

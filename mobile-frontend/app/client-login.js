@@ -1,18 +1,19 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { View, Text, TextInput, Alert } from 'react-native';
 import { useRouter, Link } from 'expo-router';
 import { clientStyles as styles } from '../styles/client.styles';
 import AppButton from '../components/MainButton';
 import BackButton from '../components/BackButton';
 import { BASE_URL } from '../config';
-
+import { UserContext } from './context/UserContext'; 
 
 export default function Login() {
   const router = useRouter();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
+  const { setUser } = useContext(UserContext); 
+ 
   const handleLogin = async () => {
     if (!username || !password) {
       Alert.alert('Error', 'Please enter username and password');
@@ -20,29 +21,32 @@ export default function Login() {
     }
 
     try {
-     
-      const response = await fetch(`${BASE_URL}/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: JSON.stringify({ username, password }),
-  });
+      const response = await fetch(`${BASE_URL}/api/tokens`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
       if (response.ok) {
-       
-        router.replace('/(tabs)');
+        const tokenData = await response.json(); 
+        
+        setUser(tokenData.user);
+
+        // ומנווטים פנימה
+        router.replace('/(client-tabs)/order');
       } else {
         const errorData = await response.json();
         Alert.alert('Login Failed', errorData.message || 'Invalid credentials');
       }
     } catch (error) {
       Alert.alert('Network Error', 'Could not connect to server.');
+      console.error(error);
     }
   };
 
-  
   return (
     <View style={styles.container}>
       <BackButton />
