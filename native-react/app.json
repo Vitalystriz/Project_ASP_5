@@ -1,24 +1,41 @@
 {
   "expo": {
-    "name": "native-react",
-    "slug": "native-react",
+    "name": "Volt delivery",
+    "slug": "volt-delivery",
     "version": "1.0.0",
+    "scheme": "volt-delivery",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/Volt_Logo.png",
     "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/Volt_Logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
-      }
+        "backgroundColor": "#ffffff",
+        "foregroundImage": "./assets/Volt_Logo.png"
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.anonymous.voltdelivery"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/Volt_Logo.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app needs to access your photos to set a profile picture."
+        }
+      ]
+    ]
   }
 }

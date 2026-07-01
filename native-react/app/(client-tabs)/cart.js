@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Platform, useColorScheme } from 'react-native';
-import OrderCard from '../components/OrderCard';
-import { getItem } from '../utils/storage';
-import { pageStyles } from '../styles/OrderPage.styles';
+import OrderCard from '../../src/components/OrderCard';
+import { pageStyles } from '../../src/styles/OrderPage.styles';
+import { useUser } from '../../src/context/UserContext'; 
+import { BASE_URL } from '../../config';
 
-const API_BASE_URL = Platform.select({
-  android: 'http://10.0.2.2:5000',
-  ios: 'http://localhost:5000',
-  default: 'http://localhost:5000',
-});
-
-export default function OrderPage({ route }) {
-    const [targetUserId, setTargetUserId] = useState(null);
+export default function CartScreen() {
+    const { user } = useUser(); 
     const [latestOrder, setLatestOrder] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [productPrices, setProductPrices] = useState({});
@@ -20,9 +15,8 @@ export default function OrderPage({ route }) {
     const colorScheme = useColorScheme();
     const isDark = colorScheme === 'dark';
 
-    const fetchActiveCartData = async (userId) => {
-        const activeUserId = userId || targetUserId;
-        if (!activeUserId) {
+    const fetchActiveCartData = async () => {
+        if (!user?.id) {
             setIsLoading(false);
             return;
         }
@@ -32,7 +26,7 @@ export default function OrderPage({ route }) {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'user-id': activeUserId
+                    'user-id': user.id 
                 }
             });
 
@@ -40,7 +34,7 @@ export default function OrderPage({ route }) {
                 const payload = await response.json();
 
                 const activeItems = payload.filter(
-                    item => item.status === 'created' && item.userId === activeUserId
+                    item => item.status === 'created' && item.userId === user.id
                 );
 
                 if (activeItems.length > 0) {
@@ -58,31 +52,8 @@ export default function OrderPage({ route }) {
     };
 
     useEffect(() => {
-        const initializePage = async () => {
-            setIsLoading(true);
-            let userId = route?.params?.userId || route?.params?.user?.id;
-            
-            if (!userId) {
-                try {
-                    const userStr = await getItem('user');
-                    if (userStr) {
-                        const user = JSON.parse(userStr);
-                        userId = user?.id;
-                    }
-                } catch (e) {
-                    console.error("Failed to parse user from storage", e);
-                }
-            }
-
-            if (userId) {
-                setTargetUserId(userId);
-            }
-            await fetchActiveCartData(userId);
-        };
-
-        initializePage();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [route?.params]);
+        fetchActiveCartData();
+    }, [user]);
 
     const handleCardPriceReport = (productId, itemTotal) => {
         setProductPrices(prev => ({
@@ -96,7 +67,7 @@ export default function OrderPage({ route }) {
         : 0;
 
     const executeFinalCheckout = async () => {
-        if (!latestOrder || !targetUserId) return;
+        if (!latestOrder || !user?.id) return;
         setIsLoading(true);
 
         try {
@@ -104,7 +75,7 @@ export default function OrderPage({ route }) {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    'user-id': targetUserId
+                    'user-id': user.id
                 },
                 body: JSON.stringify({
                     status: "in service"
@@ -158,7 +129,7 @@ export default function OrderPage({ route }) {
                             key={latestOrder._id || latestOrder.id}
                             order={latestOrder}
                             onPriceReport={handleCardPriceReport}
-                            onUpdateRequired={() => fetchActiveCartData(targetUserId)}
+                            onUpdateRequired={fetchActiveCartData}
                         />
                     </View>
 
