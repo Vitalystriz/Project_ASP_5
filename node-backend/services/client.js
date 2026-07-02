@@ -8,6 +8,15 @@ const sendToCppServer = (message) => {
         const client = net.createConnection({ host: CSERVER_HOST, port: CSERVER_PORT }, () => {
             client.write(message + '\n')
         })
+
+        client.setTimeout(5000);
+
+        client.on('timeout', () => {
+            console.error(`[TIMEOUT] C++ server communication timed out after 5000ms`);
+            client.destroy();
+            reject(new Error("Timeout communicating with C++ server"));
+        });
+
         client.on('data', (data) => {
             resolve(data.toString().trim())
             client.end()
